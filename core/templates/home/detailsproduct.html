@@ -1,0 +1,550 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Shop{% endblock title %}
+{% block account %}
+{% if is_user %}
+<ul class="ht-dropdown ht-my_account">
+    <li><a href="/dashboard">Dashboard</a></li>
+</ul>
+{% else %}
+<ul class="ht-dropdown ht-my_account">
+    <li><a href="{% url 'SIGNUP' %}">Register</a></li>
+    <li class="active"><a href="{% url 'SIGNIN' %}">Login</a></li>
+</ul>
+{% endif %}
+{% endblock account %}
+{% block body %}
+<style>
+    ul.module-list_item li a:hover {
+        margin-left: 10px;
+    }
+</style>
+<div>
+    <!-- Begin Uren's Breadcrumb Area -->
+    <div class="breadcrumb-area">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <h2>Single Product Type</h2>
+                <ul>
+                    <li><a href="{% url 'HOME' %}">Home</a></li>
+                    <li class="active">Single Product</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Uren's Breadcrumb Area End Here -->
+
+    <!-- Begin Uren's Single Product Area -->
+    <div class="sp-area">
+        <div class="container-fluid">
+            <div class="sp-nav">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="sp-img_area">
+                            <div class="sp-img_slider slick-img-slider uren-slick-slider" data-slick-options='{
+                            "slidesToShow": 1,
+                            "arrows": false,
+                            "fade": true,
+                            "draggable": false,
+                            "swipe": false,
+                            "asNavFor": ".sp-img_slider-nav"
+                            }'>
+                                {% for pdImg in pdImg %}
+                                <div class="single-slide {{pdImg.id}} zoom">
+                                    <img src="{{pdImg.pd_iamges.url}}" alt="Uren's Product Image">
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="sp-img_slider-nav slick-slider-nav uren-slick-slider slider-navigation_style-3"
+                                data-slick-options='{
+                            "slidesToShow": 3,
+                            "asNavFor": ".sp-img_slider",
+                            "focusOnSelect": true,
+                            "arrows" : true,
+                            "spaceBetween": 30
+                            }' data-slick-responsive='[
+                                    {"breakpoint":1501, "settings": {"slidesToShow": 3}},
+                                    {"breakpoint":992, "settings": {"slidesToShow": 4}},
+                                    {"breakpoint":768, "settings": {"slidesToShow": 3}},
+                                    {"breakpoint":575, "settings": {"slidesToShow": 2}}
+                                ]'>
+                                {% for pdImg in pdImg %}
+                                <div class="single-slide {{pdImg.id}}">
+                                    <img src="{{pdImg.pd_iamges.url}}" alt="Uren's Product Thumnail">
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="sp-content">
+                            <div class="sp-heading" style="width: 45em;">
+                                <h5><a href="#">{{product.pd_name}}</a></h5>
+                            </div>
+                            <div class="rating-box">
+                                <ul>
+                                    <li><i class="ion-android-star"></i></li>
+                                    <li><i class="ion-android-star"></i></li>
+                                    <li><i class="ion-android-star"></i></li>
+                                    <li class="silver-color"><i class="ion-android-star"></i></li>
+                                    <li class="silver-color"><i class="ion-android-star"></i></li>
+                                </ul>
+                            </div>
+                            <div class="" style="width: 45em;">
+                                {{product.description|safe|truncatechars:350}}
+                            </div>
+                            <div class="sp-essential_stuff">
+                                <ul>
+                                    <li>Brands <a href="javascript:void(0)">{{product.brands}}</a></li>
+                                    <li>Availability: <a href="javascript:void(0)">{{product.availability}}</a></li>
+                                    <li>Price: <a href="javascript:void(0)"><span>${{product.price}}</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="quantity">
+                                <label>Quantity</label>
+                                <div class="cart-plus-minus">
+                                    <input class="cart-plus-minus-box" id="productquantity" value="1" type="text">
+                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                </div>
+                            </div>
+                            <div class="qty-btn_area">
+                                <ul>
+                                    <input hidden name="addtocard" type="text" value="{{product.pd_name}}"
+                                        id="producttitle">
+                                    <input hidden name="addtocard" type="text" value="{{product.id}}" id="productid">
+                                    <input hidden type="text" value="{{product.primary.url}}" id="productimage">
+                                    <input hidden type="text" value="{{product.price}}" id="productprice">
+                                    <input hidden type="text" value="{{product.price}}" id="productprice">
+                                    {% csrf_token %}
+                                    <li><a class="qty-cart_btn" href="javascript:void(0)" id="addtocart">Add To Cart</a>
+                                    </li>
+                                    <li><a class="qty-wishlist_btn" href="javascript:void(0)" data-toggle="tooltip"
+                                            title="Add To Wishlist"><i class="ion-android-favorite-outline"></i></a>
+                                    </li>
+                                    <li><a class="qty-compare_btn" href="javascript:void(0)" data-toggle="tooltip"
+                                            title="Compare This Product"><i class="ion-ios-shuffle-strong"></i></a></li>
+                                </ul>
+                            </div>
+                            <div class="alert d-none alert-success mt-2 mb-0 alert-dismissible fade show w-50"
+                                id="cartalert" role="alert">
+                                <span id="cartmst">Cart added successfully</span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="uren-tag-line">
+                                <h6>Tags:</h6>
+                                <a href="javascript:void(0)">{{product.category.pd_category}}</a>
+                            </div>
+                            <div class="uren-social_link">
+                                <ul>
+                                    <li class="facebook">
+                                        <a href="https://www.facebook.com/" data-toggle="tooltip" target="_blank"
+                                            title="Facebook">
+                                            <i class="fab fa-facebook"></i>
+                                        </a>
+                                    </li>
+                                    <li class="twitter">
+                                        <a href="https://twitter.com/" data-toggle="tooltip" target="_blank"
+                                            title="Twitter">
+                                            <i class="fab fa-twitter-square"></i>
+                                        </a>
+                                    </li>
+                                    <li class="youtube">
+                                        <a href="https://www.youtube.com/" data-toggle="tooltip" target="_blank"
+                                            title="Youtube">
+                                            <i class="fab fa-youtube"></i>
+                                        </a>
+                                    </li>
+                                    <li class="google-plus">
+                                        <a href="https://www.plus.google.com/discover" data-toggle="tooltip"
+                                            target="_blank" title="Google Plus">
+                                            <i class="fab fa-google-plus"></i>
+                                        </a>
+                                    </li>
+                                    <li class="instagram">
+                                        <a href="https://rss.com/" data-toggle="tooltip" target="_blank"
+                                            title="Instagram">
+                                            <i class="fab fa-instagram"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Uren's Single Product Area End Here -->
+
+    <!-- Begin Uren's Single Product Tab Area -->
+    <div class="sp-product-tab_area">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="sp-product-tab_nav">
+                        <div class="product-tab">
+                            <ul class="nav product-menu">
+                                <li><a class="active" data-toggle="tab" href="#description"><span>Description</span></a>
+                                </li>
+                                <li><a data-toggle="tab" href="#specification"><span>Specification</span></a></li>
+                                <li><a data-toggle="tab" href="#reviews"><span>Reviews (1)</span></a></li>
+                            </ul>
+                        </div>
+                        <div class="tab-content uren-tab_content">
+                            <div id="description" class="tab-pane active show" role="tabpanel">
+                                <div class="product-description">
+                                    {{product.description|safe}}
+                                </div>
+                            </div>
+                            <div id="specification" class="tab-pane" role="tabpanel">
+                                <table class="table table-bordered specification-inner_stuff">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2"><strong>Memory</strong></td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <td>test 1</td>
+                                            <td>8gb</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2"><strong>Processor</strong></td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <td>No. of Cores</td>
+                                            <td>1</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="reviews" class="tab-pane" role="tabpanel">
+                                <div class="tab-pane active" id="tab-review">
+                                    <form class="form-horizontal" id="form-review">
+                                        <div id="review">
+                                            <table class="table table-striped table-bordered">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="width: 50%;"><strong>Customer</strong></td>
+                                                        <td class="text-right">15/09/20</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <p>Good product! Thank you very much</p>
+                                                            <div class="rating-box">
+                                                                <ul>
+                                                                    <li><i class="ion-android-star"></i></li>
+                                                                    <li><i class="ion-android-star"></i></li>
+                                                                    <li><i class="ion-android-star"></i></li>
+                                                                    <li><i class="ion-android-star"></i></li>
+                                                                    <li><i class="ion-android-star"></i></li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <h2>Write a review</h2>
+                                        <div class="form-group required">
+                                            <div class="col-sm-12 p-0">
+                                                <label>Your Email <span class="required">*</span></label>
+                                                <input class="review-input" type="email" name="con_email" id="con_email"
+                                                    required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group required second-child">
+                                            <div class="col-sm-12 p-0">
+                                                <label class="control-label">Share your opinion</label>
+                                                <textarea class="review-textarea" name="con_message"
+                                                    id="con_message"></textarea>
+                                                <div class="help-block"><span class="text-danger">Note:</span> HTML is
+                                                    not
+                                                    translated!</div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group last-child required">
+                                            <div class="col-sm-12 p-0">
+                                                <div class="your-opinion">
+                                                    <label>Your Rating</label>
+                                                    <span>
+                                                        <select class="star-rating">
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                        </select>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="uren-btn-ps_right">
+                                                <button class="uren-btn-2">Continue</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Uren's Single Product Tab Area End Here -->
+
+    <!-- Begin Uren's Product Area -->
+    <div class="uren-product_area">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title_area">
+                        <span></span>
+                        <h3>Related Products</h3>
+                    </div>
+                    <div class="product-slider uren-slick-slider slider-navigation_style-1 img-hover-effect_area"
+                        data-slick-options='{
+                    "slidesToShow": 6,
+                    "arrows" : true
+                    }' data-slick-responsive='[
+                                            {"breakpoint":1501, "settings": {"slidesToShow": 4}},
+                                            {"breakpoint":1200, "settings": {"slidesToShow": 3}},
+                                            {"breakpoint":992, "settings": {"slidesToShow": 2}},
+                                            {"breakpoint":767, "settings": {"slidesToShow": 1}},
+                                            {"breakpoint":480, "settings": {"slidesToShow": 1}}
+                                        ]'>
+                        {% for product in products %}
+                        <div class="product-slide_item">
+                            <div class="inner-slide">
+                                <div class="single-product">
+                                    <div class="product-img">
+                                        <a href="">
+                                            <img class="primary-img" src="{{product.primary.url}}"
+                                                alt="Uren's Product Image">
+                                            <img class="secondary-img" src="{{product.secondary.url}}"
+                                                alt="Uren's Product Image">
+                                        </a>
+                                        <div class="sticker">
+                                            <span class="sticker">New</span>
+                                        </div>
+                                        <div class="add-actions">
+                                            <ul>
+                                                <li>
+                                                    <input hidden name="addtocard" type="text"
+                                                        value="{{product.pd_name}}" id="producttitle">
+                                                    <input hidden name="addtocard" type="text" value="{{product.id}}"
+                                                        id="productid">
+                                                    <input hidden type="text" value="{{product.primary.url}}"
+                                                        id="productimage">
+                                                    <input hidden type="text" value="{{product.price}}"
+                                                        id="productprice">
+                                                    <input hidden type="text" value="{{product.price}}"
+                                                        id="productprice">
+
+                                                    {% csrf_token %}
+
+                                                    <a class="uren-add_cart" href="javascript:void(0)"
+                                                        data-toggle="tooltip" data-placement="top" id="addtocart"
+                                                        title="Add To Cart">
+                                                        <i class="ion-bag"></i>
+                                                    </a>
+                                                </li>
+                                                <li><a class="uren-wishlist" href="l" data-toggle="tooltip"
+                                                        data-placement="top" title="Add To Wishlist"><i
+                                                            class="ion-android-favorite-outline"></i></a>
+                                                </li>
+                                                <li><a class="uren-add_compare" href="" data-toggle="tooltip"
+                                                        data-placement="top" title="Compare This Product"><i
+                                                            class="ion-android-options"></i></a>
+                                                </li>
+                                                <li class="quick-view-btn" data-toggle="modal"
+                                                    data-target="#exampleModalCenter"><a href="javascript:void(0)"
+                                                        data-toggle="tooltip" data-placement="top" title="Quick View"><i
+                                                            class="ion-android-open"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="product-content">
+                                        <div class="product-desc_info">
+                                            <div class="rating-box">
+                                                <ul>
+                                                    <li><i class="ion-android-star"></i></li>
+                                                    <li><i class="ion-android-star"></i></li>
+                                                    <li><i class="ion-android-star"></i></li>
+                                                    <li class="silver-color"><i class="ion-android-star"></i></li>
+                                                    <li class="silver-color"><i class="ion-android-star"></i></li>
+                                                </ul>
+                                            </div>
+                                            <h6>
+                                                <a class="product-name" href="">{{product.pd_name}}</a>
+                                            </h6>
+                                            <div class="price-box">
+                                                <span class="new-price">${{product.price}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Uren's Product Area End Here -->
+
+    <!-- Begin Uren's Brand Area -->
+    <div class="uren-brand_area">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title_area">
+                        <span>Top Quality Partner</span>
+                        <h3>Shop By Brands</h3>
+                    </div>
+                    <div class="brand-slider uren-slick-slider img-hover-effect_area" data-slick-options='{
+                    "slidesToShow": 6
+                    }' data-slick-responsive='[
+                                            {"breakpoint":1200, "settings": {"slidesToShow": 5}},
+                                            {"breakpoint":992, "settings": {"slidesToShow": 3}},
+                                            {"breakpoint":767, "settings": {"slidesToShow": 3}},
+                                            {"breakpoint":577, "settings": {"slidesToShow": 2}},
+                                            {"breakpoint":321, "settings": {"slidesToShow": 1}}
+                                        ]'>
+                        <div class="slide-item">
+                            <div class="inner-slide">
+                                <div class="single-product">
+                                    <a href="javascript:void(0)">
+                                        <img src="{% static 'assets/images/brand/1.jpg' %}" alt="Uren's Brand Image">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-item">
+                            <div class="inner-slide">
+                                <div class="single-product">
+                                    <a href="javascript:void(0)">
+                                        <img src="{% static 'assets/images/brand/2.jpg' %}" alt="Uren's Brand Image">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-item">
+                            <div class="inner-slide">
+                                <div class="single-product">
+                                    <a href="javascript:void(0)">
+                                        <img src="{% static 'assets/images/brand/3.jpg' %}" alt="Uren's Brand Image">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-item">
+                            <div class="inner-slide">
+                                <div class="single-product">
+                                    <a href="javascript:void(0)">
+                                        <img src="{% static 'assets/images/brand/4.jpg' %}" alt="Uren's Brand Image">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-item">
+                            <div class="inner-slide">
+                                <div class="single-product">
+                                    <a href="javascript:void(0)">
+                                        <img src="{% static 'assets/images/brand/5.jpg' %}" alt="Uren's Brand Image">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-item">
+                            <div class="inner-slide">
+                                <div class="single-product">
+                                    <a href="javascript:void(0)">
+                                        <img src="{% static 'assets/images/brand/6.jpg' %}" alt="Uren's Brand Image">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-item">
+                            <div class="inner-slide">
+                                <div class="single-product">
+                                    <a href="javascript:void(0)">
+                                        <img src="{% static 'assets/images/brand/1.jpg' %}" alt="Uren's Brand Image">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-item">
+                            <div class="inner-slide">
+                                <div class="single-product">
+                                    <a href="javascript:void(0)">
+                                        <img src="{% static 'assets/images/brand/7.jpg' %}" alt="Uren's Brand Image">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-item">
+                            <div class="inner-slide">
+                                <div class="single-product">
+                                    <a href="javascript:void(0)">
+                                        <img src="{% static 'assets/images/brand/2.jpg' %}" alt="Uren's Brand Image">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Uren's Brand Area End Here -->
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $("#addtocart").on('click', function () {
+        var productId = $("#productid").val();
+        var productimage = $("#productimage").val();
+        var producttitle = $("#producttitle").val();
+        var productprice = $("#productprice").val();
+        var productquantity = $("#productquantity").val();
+        var producturl = $("#url").val();
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        data = {
+            'productId': productId,
+            'quantity': productquantity,
+        }
+        $.ajax({
+            url: window.location.href,
+            type: 'POST',
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+            data: {
+                'productId': productId,
+                'quantity': productquantity,
+            },
+            success: function (res) {
+                if (res.status == "success") {
+                    var cartalert = $("#cartalert");
+                    cartalert.removeClass("d-none")
+                    setTimeout(function () {
+                        cartalert.addClass("d-none");
+                        location.reload();
+                    }, 1000);
+                }
+                
+            },
+        });
+    })
+</script>
+{% endblock body %}

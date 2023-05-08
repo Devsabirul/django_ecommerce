@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <style>
+        .height-100 {
+            height: 100vh
+        }
+
+        .card {
+            width: 400px;
+            border: none;
+            height: 300px;
+            box-shadow: 0px 5px 20px 0px #d2dae3;
+            z-index: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center
+        }
+
+        .card h6 {
+            color: red;
+            font-size: 20px
+        }
+
+        .inputs input {
+            width: 40px;
+            height: 40px
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            margin: 0
+        }
+
+        .card-2 {
+            background-color: #fff;
+            padding: 10px;
+            width: 350px;
+            height: 100px;
+            bottom: -50px;
+            left: 20px;
+            position: absolute;
+            border-radius: 5px
+        }
+
+        .card-2 .content {
+            margin-top: 50px
+        }
+
+        .card-2 .content a {
+            color: red
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border: 2px solid red
+        }
+
+        .validate {
+            border-radius: 20px;
+            height: 40px;
+            background-color: red;
+            border: 1px solid red;
+            width: 140px
+        }
+
+        p#validate_msg {
+            margin-bottom: -10px;
+            font-size: 15px;
+            color: red;
+            font-family: system-ui;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container height-100 d-flex justify-content-center align-items-center">
+        <div class="position-relative">
+            <div class="card p-2 text-center">
+                <h6>Please enter the one time password <br> to verify your account</h6>
+                <div> <span>A code has been sent toyour email</span></div>
+
+                <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
+                    {% csrf_token %}
+                    <input class="m-2 text-center form-control rounded" type="text" id="first" maxlength="1" required />
+                    <input class="m-2 text-center form-control rounded" type="text" id="second" maxlength="1"
+                        required />
+                    <input class="m-2 text-center form-control rounded" type="text" id="third" maxlength="1" required />
+                    <input class="m-2 text-center form-control rounded" type="text" id="fourth" maxlength="1"
+                        required />
+                    <input class="m-2 text-center form-control rounded" type="text" id="fifth" maxlength="1" required />
+                    <input class="m-2 text-center form-control rounded" type="text" id="sixth" maxlength="1" required />
+                    <input type="hidden" id="user_id" value="{{id}}">
+                </div>
+                <p id="validate_msg"></p>
+                <div class="mt-4">
+                    <button class=" btn btn-danger px-4 validate" onclick="optvalue()">Validate</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.js"></script>
+
+    <script>
+        function optvalue() {
+            let first = $('#first').val();
+            let second = $('#second').val();
+            let third = $('#third').val();
+            let fourth = $('#fourth').val();
+            let fifth = $('#fifth').val();
+            let sixth = $('#sixth').val();
+            const code = first.concat(second, third, fourth, fifth, sixth)
+            const user_id = $("#user_id").val()
+            if (code.length == 6) {
+                $('#validate_msg').text('');
+                $('input').attr("disabled", true)
+                $('.validate').text('Loading...')
+                $('.validate').attr("disabled", true)
+                $.ajax({
+                    type: 'POST',
+                    url: `/account/otp/${user_id}`,
+                    data: {
+                        otp: code,
+                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                    },
+                    success: function (data) {
+                        console.log(data.status)
+                        if (data.status == "failed") {
+                            $('#validate_msg').text('Invalid verification code');
+                            $('input').attr("disabled", false)
+                            $('.validate').text('Validate')
+                            $('.validate').attr("disabled", false)
+                        } else if (data.status == "success") {
+                            window.location = "/account/success"
+                        }
+                    }
+                })
+            }
+            else {
+                $('#validate_msg').text('Enter verification code');
+            }
+        }
+
+    </script>
+</body>
+
+</html>

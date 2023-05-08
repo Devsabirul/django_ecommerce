@@ -1,0 +1,161 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Shop{% endblock title %}
+{% block account %}
+{% if is_user %}
+<ul class="ht-dropdown ht-my_account">
+    <li><a href="/dashboard">Dashboard</a></li>
+</ul>
+{% else %}
+<ul class="ht-dropdown ht-my_account">
+    <li><a href="{% url 'SIGNUP' %}">Register</a></li>
+    <li class="active"><a href="{% url 'SIGNIN' %}">Login</a></li>
+</ul>
+{% endif %}
+
+{% endblock account %}
+{% block body %}
+<style>
+    .blog-img.img-hover_effect {
+        height: 150px !important;
+        overflow: hidden !important;
+    }
+
+    .blog-img.img-hover_effect img {
+        height: 100% !important;
+        width: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .blog_content {
+        height: 80px;
+    }
+
+    .uren-blog_area.grid-view_area .blog-item_wrap [class*="col-"]:not(:nth-child(-n+3)) .blog-item {
+        margin-top: 0px !important;
+    }
+
+    a.btn.btn-sm.btn-danger:hover {
+        color: white !important;
+    }
+
+    @media (max-width: 991px) .uren-blog_area.grid-view_area .blog-item_wrap [class*="col-"]:not(:first-child) .blog-item {
+        margin-top: 0px !important;
+    }
+</style>
+<!--  Header Main Area End Here -->
+
+<!-- Begin Breadcrumb Area -->
+<div class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <h2>Blog</h2>
+            <ul>
+                <li><a href="{% url 'HOME' %}">Home</a></li>
+                <li class="active">blog</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--  Breadcrumb Area End Here -->
+
+<!-- Begin Blog Right Sidebar Area -->
+<div class="uren-blog_area grid-view_area blog-with_sidebar">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 order-2">
+                <div class="uren-blog-sidebar-wrapper">
+                    <div class="uren-blog-sidebar">
+                        <h4 class="uren-blog-sidebar-title">Search</h4>
+                        <div class="search-form_area">
+                            <form class="search-form" action="javascript:void(0)">
+                                <input type="text" class="search-field" placeholder="search here">
+                                <button type="submit" class="search-btn"><i class="ion-ios-search"></i></button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="uren-blog-sidebar">
+                        <h4 class="uren-blog-sidebar-title">Recent Posts</h4>
+                        {% if recents %}
+                        {% for recent in recents|slice:"5" %}
+                        <div class="recent-post">
+                            <div class="recent-post_thumb">
+                                <a href="{% url 'single_blog' recent.slug %}">
+                                    <img class="img-full" src="{{recent.blog_image.url}}" alt="Uren's Blog Image">
+                                </a>
+                            </div>
+                            <div class="recent-post_desc">
+                                <span><a
+                                        href="{% url 'single_blog' recent.slug %}">{{recent.title|truncatechars:25}}</a></span>
+                                <span class="post-date">{{recent.date|truncatechars:20}}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <p class="">Blog not available</p>
+                        {% endif %}
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 order-1">
+                <div class="row blog-item_wrap">
+                    {% if blogs %}
+                    {% for blog in blogs %}
+                    <div class="card p-2 m-2 col-lg-3">
+                        <div class="blog-item">
+                            <div class="blog-img img-hover_effect">
+                                <a href="{% url 'single_blog' blog.slug %}">
+                                    <img src="{{blog.blog_image.url}}" alt="Uren's Blog Image">
+                                </a>
+                            </div>
+                            <div class="blog-content">
+                                <h5><a href="{% url 'single_blog' blog.slug %}">{{blog.title|truncatechars:25}}</a></h5>
+                                <p class="post-date">{{blog.date}}</p>
+                                <div class="blog_content">
+                                    <p>{{blog.description|safe|truncatechars:80}}</p>
+                                </div>
+                                <div class="uren-btn-ps_left">
+                                    <a class="btn btn-sm btn-danger" href="{% url 'single_blog' blog.slug %}">Read
+                                        More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p class=""
+                        style="text-align: center !important; width: 100%;font-size: 20px;color: red;font-family: system-ui;">
+                        Blogs not available</p>
+                    {% endif %}
+                </div>
+                {% if blogs %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="uren-paginatoin-area">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <ul class="uren-pagination-box carlet-color">
+                                        <li class="active"><a href="javascript:void(0)">1</a></li>
+                                        <li><a href="javascript:void(0)">2</a></li>
+                                        <li><a href="javascript:void(0)">3</a></li>
+                                        <li><a href="javascript:void(0)">4</a></li>
+                                        <li><a href="javascript:void(0)">5</a></li>
+                                        <li><a class="Next" href="javascript:void(0)">Next</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--  Blog Right Sidebar Area End Here -->
+
+{% endblock body %}

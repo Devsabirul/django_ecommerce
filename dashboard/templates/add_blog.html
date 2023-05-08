@@ -1,0 +1,62 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block title %}Dashboard - SHISHIR{% endblock title %}
+{% block profile %}
+<div class="d-flex align-items-center ms-4 mb-4">
+    <div class="position-relative">
+        <div class="profile_pic">
+            <img class="" src="{{profile.avater.url}}" alt="">
+        </div>
+        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+    </div>
+    <div class="ms-3">
+        <h6 class="mb-0">{{profile.user.username}}</h6>
+        <span>Admin</span>
+    </div>
+</div>
+{% endblock profile %}
+{% block body %}
+<style>
+    .cke_bottom {
+        padding: 6px 8px 2px;
+        position: relative;
+        border-top: 1px solid #d1d1d1;
+        background: #f8f8f8;
+        display: none;
+    }
+</style>
+<div class="container-fluid pt-4 px-4">
+    <div class="row p-3 bg-secondary rounded align-items-center justify-content-center mx-0">
+        <div class="col-md-10">
+            <h5>Add your Blog</h5>
+            <form action="" method="post" class="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" name="title" class="form-control" id="title" required>
+                </div>
+                <div class="mb-3">
+                    <label for="editor" class="form-label">Description</label>
+                    <textarea name="editor-1" id="editor" cols="30" rows="10"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="tag" class="form-label">Tags</label>
+                    <input type="text" name="tag" class="form-control" id="tag" required>
+                </div>
+                <div class="mb-3">
+                    <label for="images" class="form-label">Blog Images</label>
+                    <input type="file" name="blogImages" class="form-control" id="images"
+                        style="background-color: black;" required>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button id="blog" class="btn btn-primary" type="submit">Add Blog</button>
+                    <a class="ml-2 btn btn-outline-primary" href="/dashboard">X</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    CKEDITOR.replace('editor-1');
+</script>
+{% endblock body %}

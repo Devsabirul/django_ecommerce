@@ -1,0 +1,160 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}Shop{% endblock title %}
+{% block account %}
+{% if is_user %}
+<ul class="ht-dropdown ht-my_account">
+    <li><a href="/dashboard">Dashboard</a></li>
+</ul>
+{% else %}
+<ul class="ht-dropdown ht-my_account">
+    <li><a href="{% url 'SIGNUP' %}">Register</a></li>
+    <li class="active"><a href="{% url 'SIGNIN' %}">Login</a></li>
+</ul>
+{% endif %}
+
+{% endblock account %}
+{% block body %}
+
+<!--  Header Main Area End Here -->
+
+<!-- Begin Uren's Breadcrumb Area -->
+<div class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <h2>Blog Details</h2>
+            <ul>
+                <li><a href="{% url 'HOME' %}">Home</a></li>
+                <li class="active">blog</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--readcrumb Area End Here -->
+
+<!-- BeginBlog Details Right Sidebar Area -->
+<div class="uren-blog_area uren-blog-details">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 order-2">
+                <div class="uren-blog-sidebar-wrapper">
+                    <div class="uren-blog-sidebar">
+                        <h4 class="uren-blog-sidebar-title">Search</h4>
+                        <div class="search-form_area">
+                            <form class="search-form" action="javascript:void(0)">
+                                <input type="text" class="search-field" placeholder="search here">
+                                <button type="submit" class="search-btn"><i class="ion-ios-search"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="uren-blog-sidebar">
+                        <h4 class="uren-blog-sidebar-title">Recent Posts</h4>
+                        {% for recent in blogs|slice:"5" %}
+                        <div class="recent-post">
+                            <div class="recent-post_thumb">
+                                <a href="{% url 'single_blog' recent.slug %}">
+                                    <img class="img-full" src="{{recent.blog_image.url}}" alt="Uren's Blog Image">
+                                </a>
+                            </div>
+                            <div class="recent-post_desc">
+                                <span><a
+                                        href="{% url 'single_blog' recent.slug %}">{{recent.title|truncatechars:25}}</a></span>
+                                <span class="post-date">{{recent.date|truncatechars:20}}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="uren-blog-sidebar">
+                        <h4 class="uren-blog-sidebar-title">Tags</h4>
+                        <ul class="uren-tags_list">
+                            {% for tag in blog_tag %}
+                            <li><a href="javascript:void(0)">{{tag}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 order-1">
+                <div class="blog-item">
+                    <div class="blog-img img-hover_effect mb-3">
+                        <img src="{{blog.blog_image.url}}" alt="Blog Image">
+                    </div>
+                    <span class="">Author: {{blog.author}}</span>
+                    <div class="blog-content" style="margin-top:-21px;">
+                        <h3>{{blog.title}}</h3>
+                        <p class="post-date">{{blog.date}}</p>
+                        <p>{{blog.description|safe}}</p>
+                    </div>
+                    <div class="uren-tag-line">
+                        <h4>Tag:</h4>
+                        {% for tag in blog_tag %}
+                        <a href="javascript:void(0)">{{tag}}</a>
+                        {% endfor %}
+                    </div>
+                    <div class="uren-social_link">
+                        <ul>
+                            <li class="facebook">
+                                <a href="https://www.facebook.com/" data-toggle="tooltip" target="_blank"
+                                    title="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                            </li>
+                            <li class="twitter">
+                                <a href="https://twitter.com/" data-toggle="tooltip" target="_blank" title="Twitter">
+                                    <i class="fab fa-twitter-square"></i>
+                                </a>
+                            </li>
+                            <li class="google-plus">
+                                <a href="https://www.plus.google.com/discover" data-toggle="tooltip" target="_blank"
+                                    title="Google Plus">
+                                    <i class="fab fa-google-plus"></i>
+                                </a>
+                            </li>
+                            <li class="instagram">
+                                <a href="https://rss.com/" data-toggle="tooltip" target="_blank" title="Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="uren-blog-comment-wrapper mt-5">
+                        <h3>leave a reply</h3>
+                        <p>Your email address will not be published. Required fields are marked *</p>
+                        <form action="javascript:void(0)">
+                            <div class="comment-post-box">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <label>comment</label>
+                                        <textarea name="commnet" placeholder="Write a comment"></textarea>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4">
+                                        <label>Name</label>
+                                        <input type="text" class="coment-field" placeholder="Name">
+                                    </div>
+                                    <div class="col-lg-4 col-md-4">
+                                        <label>Email</label>
+                                        <input type="text" class="coment-field" placeholder="Email">
+                                    </div>
+                                    <div class="col-lg-4 col-md-4">
+                                        <label>Website</label>
+                                        <input type="text" class="coment-field" placeholder="Website">
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="comment-btn_wrap f-left">
+                                            <div class="uren-post-btn_area">
+                                                <a class="uren-btn-2" href="javascript:void(0)">Post comment</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Blog Details Right Sidebar Area End Here -->
+{% endblock body %}
