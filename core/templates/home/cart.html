@@ -61,28 +61,39 @@
                             </thead>
                             <tbody>
                                 {% if carts %}
-                                    {% for cart in carts %}
-                                    <tr>
-                                        <td class="uren-product-remove">
-                                            <a href="{% url 'deleteCart' cart.id %}" id="cartremove">
-                                                <i class="fa fa-trash" title="Remove"></i>
-                                            </a>
-                                        </td>
-                                        <td class="uren-product-thumbnail"><a href="javascript:void(0)"><img
-                                                    src="{{cart.product.primary.url}}" alt="Uren's Cart Thumbnail"></a></td>
-                                        <td class="uren-product-name"><a
-                                                href="{% url 'detailsProduct' cart.product.slug %}">{{cart.product.pd_name}}</a>
-                                        </td>
-                                        <td class="uren-product-price"><span class="amount">${{cart.product.price}}</span>
-                                        </td>
-                                        <td class="uren-product-price"><span class="quantity">{{cart.quantity}}</span>
-                                        </td>
-                                        <td class="product-subtotal"><span class="amount">${{cart.line_total}}</span></td>
-                                    </tr>
-                                    {% endfor %}
+                                {% for cart in carts %}
+                                <tr>
+                                    <td class="uren-product-remove">
+                                        <a href="{% url 'deleteCart' cart.id %}" id="cartremove">
+                                            <i class="fa fa-trash" title="Remove"></i>
+                                        </a>
+                                    </td>
+                                    <td class="uren-product-thumbnail"><a href="javascript:void(0)"><img
+                                                src="{{cart.product.primary.url}}" alt="Uren's Cart Thumbnail"></a></td>
+                                    <td class="uren-product-name"><a
+                                            href="{% url 'detailsProduct' cart.product.slug %}">{{cart.product.pd_name|truncatechars:65}}</a>
+                                    </td>
+                                    <td class="uren-product-price"><span class="amount">${{cart.product.price}}</span>
+                                    </td>
+                                    {% comment %} <td class="uren-product-price"><span
+                                            class="quantity">{{cart.quantity}}</span>
+                                    </td> {% endcomment %}
+                                    <td class="quantity">
+                                        <label>Quantity</label>
+                                        <div class="cart-plus-minus">
+                                            <input type="hidden" name="product_id" value="{{cart.id}}">
+                                            <input class="cart-plus-minus-box" value="{{cart.quantity}}" type="text">
+                                            <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                            <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                        </div>
+                                    </td>
+                                    <td class="product-subtotal"><span
+                                            class="line_total_amount">${{cart.line_total}}</span></td>
+                                </tr>
+                                {% endfor %}
                                 {% else %}
                                 <tr>
-                                    <td colspan="6" class="text-center font-weight-bold text-danger">Cart  Empty </td>
+                                    <td colspan="6" class="text-center font-weight-bold text-danger">Cart Empty </td>
                                 </tr>
                                 {% endif %}
                             </tbody>
@@ -105,7 +116,7 @@
                                 <h2>Cart totals</h2>
                                 <ul>
                                     <li>Subtotal <span id="subtotal_">${{subtotal}}</span></li>
-                                    <li>Total <span>${{subtotal}}</span></li>
+                                    <li>Total <span id="total_">${{subtotal}}</span></li>
                                 </ul>
                                 <a href="{% url 'checkoutPage' %}">Proceed to checkout</a>
                             </div>
@@ -118,5 +129,59 @@
 </div>
 
 <!-- Uren's Cart Area End Here -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    /*----------------------------------------*/
+    /*  Cart Plus Minus Button
+    /*----------------------------------------*/
+    $('.qtybutton').on('click', function () {
+        var $button = $(this);
+        var cartId = $button.parent().find('input:first').val();
+        var oldValue = $button.parent().find('input:last').val();
+        var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+        if ($button.hasClass('inc')) {
+            var newVal = parseFloat(oldValue) + 1;
+        } else {
+            // Don't allow decrementing below zero
+            if (oldValue > 1) {
+                var newVal = parseFloat(oldValue) - 1;
+            } else {
+                newVal = 1;
+            }
+        }
+        $button.parent().find('input:last').val(newVal);
+        $.ajax({
+            url: window.location.href,
+            type: 'POST',
+            headers: {
+                "X-CSRFToken": csrftoken
+            },
+            data: {
+                'cartId': cartId,
+                'quantity': newVal,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            success: function (res) {
+                if (res.status == "success") {
+                    var line_total = document.getElementsByClassName("line_total_amount");
+                    var base_total_price = document.getElementsByClassName("total-price");
+                    var base_subtotal = document.getElementsByClassName('ammount');
+                    var subtotal = document.getElementById("subtotal_");
+                    var total = document.getElementById("total_");
+                    subtotal.innerText = `$${res.subtotal}`;
+                    base_total_price[0].innerText = `$${res.subtotal}`;
+                    base_total_price[1].innerText = `$${res.subtotal}`;
+                    base_subtotal[0].innerText = `$${res.subtotal}`;
+                    total.innerText = `$${res.total}`;
+                    for (let i = 0; i < line_total.length; i++) {
+                        line_total[i].innerText = `$${res.line_total[i]}`
+                    }
+                }
+
+            },
+        });
+
+    });
+</script>
 
 {% endblock body %}

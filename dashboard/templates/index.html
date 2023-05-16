@@ -85,79 +85,79 @@
 </div>
 <!-- Sales Chart End -->
 
-
-<!-- Recent Sales Start -->
+<!-- Product Start -->
 <div class="container-fluid pt-4 px-4">
     <div class="bg-secondary text-center rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
-            <h6 class="mb-0">Recent Salse</h6>
-            <a href="">Show All</a>
+            <h6 class="mb-0">All Products</h6>
+            <a href="{% url 'product_table' %}">See All</a>
         </div>
         <div class="table-responsive">
             <table class="table text-start align-middle table-bordered table-hover mb-0">
                 <thead>
                     <tr class="text-white">
-                        <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Invoice</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">S.N</th>
+                        <th scope="col" style="width: 85%;">products</th>
                         <th scope="col">Action</th>
                     </tr>
+
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><input class="form-check-input" type="checkbox"></td>
-                        <td>01 Jan 2045</td>
-                        <td>INV-0123</td>
-                        <td>Jhon Doe</td>
-                        <td>$123</td>
-                        <td>Paid</td>
-                        <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                    </tr>
-                    <tr>
-                        <td><input class="form-check-input" type="checkbox"></td>
-                        <td>01 Jan 2045</td>
-                        <td>INV-0123</td>
-                        <td>Jhon Doe</td>
-                        <td>$123</td>
-                        <td>Paid</td>
-                        <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                    </tr>
-                    <tr>
-                        <td><input class="form-check-input" type="checkbox"></td>
-                        <td>01 Jan 2045</td>
-                        <td>INV-0123</td>
-                        <td>Jhon Doe</td>
-                        <td>$123</td>
-                        <td>Paid</td>
-                        <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                    </tr>
-                    <tr>
-                        <td><input class="form-check-input" type="checkbox"></td>
-                        <td>01 Jan 2045</td>
-                        <td>INV-0123</td>
-                        <td>Jhon Doe</td>
-                        <td>$123</td>
-                        <td>Paid</td>
-                        <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                    </tr>
-                    <tr>
-                        <td><input class="form-check-input" type="checkbox"></td>
-                        <td>01 Jan 2045</td>
-                        <td>INV-0123</td>
-                        <td>Jhon Doe</td>
-                        <td>$123</td>
-                        <td>Paid</td>
-                        <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                    </tr>
+                    {% if products %}
+                        {% for product in products|slice:5 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{product.pd_name|truncatechars:70}}</td>
+                                <td><a class="btn btn-sm btn-primary" href="{% url 'update_product' product.id %}">Detail</a></td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-danger" >Product not available</td>
+                            </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-<!-- Recent Sales End -->
+<!-- Prodeuct End -->
+<!-- Blogs Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">All Blogs</h6>
+            <a href="{% url 'blog_table' %}">See All</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr class="text-white">
+                        <th scope="col">S.N</th>
+                        <th scope="col" style="width: 85%;">Blog Post</th>
+                        <th scope="col">Action</th>
+                    </tr>
 
+                </thead>
+                <tbody>
+                    {% if blogs %}
+                        {% for blog in blogs|slice:5 %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{blog.title|truncatechars:70}}</td>
+                                <td><a class="btn btn-sm btn-primary" href="{% url 'update_blog' blog.id %}">Detail</a></td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center text-danger" >Blog not available</td>
+                            </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Blogs End -->
 
 {% endblock body %}

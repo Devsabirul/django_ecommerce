@@ -511,6 +511,27 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
+    /*----------------------------------------*/
+    /*  Cart Plus Minus Button
+    /*----------------------------------------*/
+    $('.qtybutton').on('click', function () {
+        var $button = $(this);
+        var oldValue = $button.parent().find('input').val();
+        if ($button.hasClass('inc')) {
+            var newVal = parseFloat(oldValue) + 1;
+        } else {
+            // Don't allow decrementing below zero
+            if (oldValue > 1) {
+                var newVal = parseFloat(oldValue) - 1;
+            } else {
+                newVal = 1;
+            }
+        }
+        $button.parent().find('input').val(newVal);
+    });
+    /*----------------------------------------*/
+    /*  Cart Plus Minus Button End
+    /*----------------------------------------*/
     $("#addtocart").on('click', function () {
         var productId = $("#productid").val();
         var productimage = $("#productimage").val();
@@ -542,7 +563,7 @@
                         location.reload();
                     }, 1000);
                 }
-                
+
             },
         });
     })

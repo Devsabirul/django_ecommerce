@@ -536,7 +536,7 @@
                                                 alt="Uren's Product Image">
                                         </div>
                                         <div class="product-item_content">
-                                            <a class="product-item_title" href="{% url 'detailsProduct' cart.product.slug %}">{{cart.product.pd_name}}</a>
+                                            <a class="product-item_title" href="{% url 'detailsProduct' cart.product.slug %}">{{cart.product.pd_name|truncatechars:20}}</a>
                                             <span class="product-item_quantity">{{cart.quantity}} x ${{cart.product.price}}</span>
                                         </div>
                                     </li>

@@ -292,24 +292,24 @@
 	/*----------------------------------------*/
 	/*  Cart Plus Minus Button
 /*----------------------------------------*/
-	$('.cart-plus-minus').append(
-		'<div class="dec qtybutton"><i class="fa fa-angle-down"></i></div><div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>'
-	);
-	$('.qtybutton').on('click', function () {
-		var $button = $(this);
-		var oldValue = $button.parent().find('input').val();
-		if ($button.hasClass('inc')) {
-			var newVal = parseFloat(oldValue) + 1;
-		} else {
-			// Don't allow decrementing below zero
-			if (oldValue > 1) {
-				var newVal = parseFloat(oldValue) - 1;
-			} else {
-				newVal = 1;
-			}
-		}
-		$button.parent().find('input').val(newVal);
-	});
+	// $('.cart-plus-minus').append(
+	// 	'<div class="dec qtybutton"><i class="fa fa-angle-down"></i></div><div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>'
+	// );
+	// $('.qtybutton').on('click', function () {
+	// 	var $button = $(this);
+	// 	var oldValue = $button.parent().find('input').val();
+	// 	if ($button.hasClass('inc')) {
+	// 		var newVal = parseFloat(oldValue) + 1;
+	// 	} else {
+	// 		// Don't allow decrementing below zero
+	// 		if (oldValue > 1) {
+	// 			var newVal = parseFloat(oldValue) - 1;
+	// 		} else {
+	// 			newVal = 1;
+	// 		}
+	// 	}
+	// 	$button.parent().find('input').val(newVal);
+	// });
 
 	/*----------------------------------------*/
 	/* Toggle Function Active
@@ -408,7 +408,7 @@
 						}
 					}
 				}
-				if (activeChild.hasClass('list')) {} else {
+				if (activeChild.hasClass('list')) { } else {
 					if (ww < 576) {
 						$('.product-view-mode a').removeClass('active');
 						$('.product-view-mode').children().first().addClass('active');
@@ -471,7 +471,7 @@
 		$('[data-toggle="tooltip"]').tooltip();
 	});
 	/*--------------------------------
-    Price Slider Active
+	Price Slider Active
 -------------------------------- */
 	var sliderrange = $('#slider-range');
 	var amountprice = $('#amount');
@@ -543,25 +543,25 @@
 				$speed = $options.speed ? parseInt($options.speed, 10) : 500,
 				$appendArrows = $options.appendArrows ? $options.appendArrows : $this,
 				$prevArrow =
-				$arrows === true ?
-				$options.prevArrow ?
-				'<span class="' +
-				$options.prevArrow.buttonClass +
-				'"><i class="' +
-				$options.prevArrow.iconClass +
-				'"></i></span>' :
-				'<button class="tty-slick-text-btn tty-slick-text-prev"><i class="ion-ios-arrow-back"></i></span>' :
-				'',
+					$arrows === true ?
+						$options.prevArrow ?
+							'<span class="' +
+							$options.prevArrow.buttonClass +
+							'"><i class="' +
+							$options.prevArrow.iconClass +
+							'"></i></span>' :
+							'<button class="tty-slick-text-btn tty-slick-text-prev"><i class="ion-ios-arrow-back"></i></span>' :
+						'',
 				$nextArrow =
-				$arrows === true ?
-				$options.nextArrow ?
-				'<span class="' +
-				$options.nextArrow.buttonClass +
-				'"><i class="' +
-				$options.nextArrow.iconClass +
-				'"></i></span>' :
-				'<button class="tty-slick-text-btn tty-slick-text-next"><i class="ion-ios-arrow-forward"></i></span>' :
-				'',
+					$arrows === true ?
+						$options.nextArrow ?
+							'<span class="' +
+							$options.nextArrow.buttonClass +
+							'"><i class="' +
+							$options.nextArrow.iconClass +
+							'"></i></span>' :
+							'<button class="tty-slick-text-btn tty-slick-text-next"><i class="ion-ios-arrow-forward"></i></span>' :
+						'',
 				$rows = $options.rows ? parseInt($options.rows, 10) : 1,
 				$rtl = $options.rtl || $html.attr('dir="rtl"') || $body.attr('dir="rtl"') ? true : false,
 				$slidesToShow = $options.slidesToShow ? parseInt($options.slidesToShow, 10) : 1,
@@ -678,35 +678,35 @@
 		prevArrow: '<button class="slick-prev"><i class="ion-ios-arrow-back"></i></button>',
 		nextArrow: '<button class="slick-next"><i class="ion-ios-arrow-forward"></i></button>',
 		responsive: [{
-				breakpoint: 1501,
-				settings: {
-					slidesToShow: 1
-				}
-			},
-			{
-				breakpoint: 1200,
-				settings: {
-					slidesToShow: 1
-				}
-			},
-			{
-				breakpoint: 992,
-				settings: {
-					slidesToShow: 1
-				}
-			},
-			{
-				breakpoint: 768,
-				settings: {
-					slidesToShow: 1
-				}
-			},
-			{
-				breakpoint: 575,
-				settings: {
-					slidesToShow: 1
-				}
+			breakpoint: 1501,
+			settings: {
+				slidesToShow: 1
 			}
+		},
+		{
+			breakpoint: 1200,
+			settings: {
+				slidesToShow: 1
+			}
+		},
+		{
+			breakpoint: 992,
+			settings: {
+				slidesToShow: 1
+			}
+		},
+		{
+			breakpoint: 768,
+			settings: {
+				slidesToShow: 1
+			}
+		},
+		{
+			breakpoint: 575,
+			settings: {
+				slidesToShow: 1
+			}
+		}
 		]
 	});
 	$('.single-blog_slider').on('wheel', function (e) {
@@ -761,7 +761,7 @@
 				function (s) {
 					var matches = (this.document || this.ownerDocument).querySelectorAll(s),
 						i = matches.length;
-					while (--i >= 0 && matches.item(i) !== this) {}
+					while (--i >= 0 && matches.item(i) !== this) { }
 					return i > -1;
 				};
 		}
@@ -773,7 +773,7 @@
 	};
 
 	/*--------------------------
-        jQuery Zoom
+		jQuery Zoom
 	---------------------------- */
 	$('.zoom').zoom();
 })(jQuery);

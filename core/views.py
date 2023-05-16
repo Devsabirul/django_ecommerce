@@ -2,37 +2,43 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import *
 from django.db.models import Q
+from .forms import *
 
 
 def home(request):
     is_logged_in = False
+    carts = None
+    subtotal = 0
     if request.user.is_authenticated:
         is_logged_in = True
-        product = Product.objects.order_by('-id')
-        products = Product.objects.all()
-        recents = BlogPost.objects.order_by('-id')
         carts = Cart.objects.filter(user=request.user)
         subtotal = get_subTotal(carts)
+    product = Product.objects.order_by('-id')
+    products = Product.objects.all()
+    recents = BlogPost.objects.order_by('-id')
+    
 
-        context = {
-            'is_user': is_logged_in,
-            'product': product,
-            'products': products,
-            'blog': recents,
-            'carts':carts,
-            'subtotal':subtotal
-        }
-        return render(request, "home/index.html", context)
-    else:
-        return redirect('SIGNIN')
+    context = {
+        'is_user': is_logged_in,
+        'product': product,
+        'products': products,
+        'blog': recents,
+        'carts':carts,
+        'subtotal':subtotal
+    }
+    return render(request, "home/index.html", context)
 
 def myaccount(request):
     is_logged_in = False
     if request.user.is_authenticated:
         is_logged_in = True
-        profile = Profile.objects.get(user=request.user)
         carts = Cart.objects.filter(user=request.user)
         subtotal = get_subTotal(carts)
+        profile = Profile.objects.get(user=request.user)
+        order = Order.objects.filter(user=request.user)
+        orderItems = OrderItems.objects.filter(order__in=order)
+        print(orderItems)
+
         if profile.is_seller == 'on':
             return redirect('dashboard')
         else:
@@ -50,13 +56,15 @@ def myaccount(request):
 
 def shop(request):
     is_logged_in = False
+    carts = None
+    subtotal = 0
     if request.user.is_authenticated:
         is_logged_in = True
+        carts = Cart.objects.filter(user=request.user)
+        subtotal = get_subTotal(carts)
     products = Product.objects.order_by("-id")
     pdImg = ProductImages.objects.all()
     obj = ProductCategory.objects.all()
-    carts = Cart.objects.filter(user=request.user)
-    subtotal = get_subTotal(carts)
     # get unique category start
     uCategory = dict()
     for unique in obj:
@@ -160,6 +168,22 @@ def cart(request):
         is_logged_in = True
         carts = Cart.objects.filter(user=request.user)
         subtotal = get_subTotal(carts)
+
+        if request.method=="POST":
+            cartid = request.POST['cartId']
+            quantity = request.POST['quantity']
+            quantity = int(quantity)
+            cart = Cart.objects.get(id=cartid)
+            cart.quantity =  quantity
+            cart.save()
+            carts_ = Cart.objects.filter(user=request.user)
+            subtotal_ = get_subTotal(carts_)
+            line_totals = []
+            for i in carts_:
+                line_totals.append(i.product.price * i.quantity)
+                
+            return JsonResponse({'status': 'success','subtotal':subtotal_,'total':subtotal_,'line_total':line_totals})
+
         context = {
             'is_user': is_logged_in,
             'carts':carts,
@@ -200,18 +224,34 @@ def checkoutPage(request):
         carts = Cart.objects.filter(user=request.user)
         if carts:
             subtotal = get_subTotal(carts)
+            cfm = CustomerForm(request.POST)
+            sfm = ShippingForm(request.POST)
+            if request.method=="POST":
+                if cfm.is_valid():
+                    cfm.save()
+                if sfm.is_valid():
+                    sfm.save()
+
+                customer_ = Customer.objects.order_by("-id")[:1].get()
+                shipping_ = Shipping.objects.order_by("-id")[:1].get()
+                order = Order(customer=customer_,shipping=shipping_,user=request.user,order_total=subtotal)
+                order.save()
+                order_ = Order.objects.order_by("-id")[:1].get()
+                for i in carts:
+                    OrderItems(order=order_,product=i.product,quantity=i.quantity,user=request.user).save()
+                return redirect("checkoutPage")
+
             context = {
                 'is_user': is_logged_in,
                 'carts':carts,
-                'subtotal':subtotal
+                'subtotal':subtotal,
+                'cform':cfm,
+                'sform':sfm,
             }
             return render(request, "home/checkout.html", context)
         return redirect('SHOP')
     else:
         return redirect('SIGNIN')
-
-
-
 
 
 # custom function 

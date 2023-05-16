@@ -42,7 +42,7 @@
                         style="background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url('{{product.primary.url}}');">
                         <div class="slider-content">
                             <span>New thinking new possibilities</span>
-                            <h3>{{product.pd_name}}</h3>
+                            <h3>{{product.pd_name|truncatechars:15}}</h3>
                             <h4>Starting at <span>${{product.price}}</span></h4>
                             <div class="uren-btn-ps_left slide-btn">
                                 <a class="uren-btn" href="{% url 'detailsProduct' product.slug %}">Read More</a>
@@ -221,7 +221,7 @@
                                                     <li class="silver-color"><i class="ion-android-star"></i></li>
                                                 </ul>
                                             </div>
-                                            <h6 class="product-name"><a href="{% url 'detailsProduct' product.slug %}">{{product.pd_name}}</a></h6>
+                                            <h6 class="product-name"><a href="{% url 'detailsProduct' product.slug %}">{{product.pd_name|truncatechars:20}}</a></h6>
                                             <div class="price-box">
                                                 <span class="new-price new-price-2">${{product.price}}</span>
                                                 <span class="old-price">${{product.price}}</span>
