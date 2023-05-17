@@ -204,27 +204,26 @@
 <script>
     var submit_btn = document.getElementById("submit_order");
     var form_ = document.getElementById("formsubmit");
-
-    function checkform(form) {
-        // get all the inputs within the submitted form
-        var inputs = form.getElementsByTagName('input');
+    submit_btn.addEventListener("click", function () {
+        var inputs = form_.getElementsByTagName('input');
+        let isFormValid = true;
         for (var i = 0; i < inputs.length; i++) {
             // only validate the inputs that have the required attribute
             if (inputs[i].hasAttribute("required")) {
                 if (inputs[i].value == "") {
                     // found an empty field that is required
-                    alert("Please fill all required fields");
-                    return false;
+                    isFormValid = false;
+                    break;
+                    inputs[i].style.backgroundColor = "#ffa9a957";
+                    inputs[i].placeholder = "You need to fill this field";
                 }
             }
         }
-        return true;
-    }
-    submit_btn.addEventListener("click", function () {
-        var inputs = form_.getElementsByTagName('input');
-        for (var i = 0; i < inputs.length; i++) {
-            // only validate the inputs that have the required attribute
-            if (inputs[i].hasAttribute("required")) {
+        // If all inputs are filled, submit the form
+        if (isFormValid) {
+            form_.submit();
+        } else {
+            for (var i = 0; i < inputs.length; i++) {
                 if (inputs[i].value == "") {
                     // found an empty field that is required
                     inputs[i].style.backgroundColor = "#ffa9a957";
