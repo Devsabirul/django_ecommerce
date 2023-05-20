@@ -9,11 +9,20 @@ def dashboard(request):
         profile = Profile.objects.get(user=request.user)
         products = Product.objects.filter(profile=profile).order_by('-id')
         blogs = BlogPost.objects.filter(profile=profile).order_by('-id')
+        products = Product.objects.filter(profile=profile)
+        order_item = OrderItems.objects.filter(product__in=products)
+        total = 0
+        # get total order
+        for i in order_item:
+            subtotal = i.product.price * i.quantity
+            total = subtotal + total
+
         if profile.is_seller == 'on':
             context = {
                 'profile': profile,
                 'products': products,
-                'blogs': blogs
+                'blogs': blogs,
+                'total': total
             }
             return render(request, 'index.html', context)
         else:
@@ -35,6 +44,7 @@ def blog_table(request):
     else:
         return redirect('SIGNIN')
 
+
 def product_table(request):
     if request.user.is_authenticated:
         profile = Profile.objects.get(user=request.user)
@@ -46,6 +56,29 @@ def product_table(request):
         return render(request, 'products_table.html', context)
     else:
         return redirect('SIGNIN')
+
+
+def order_table(request):
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user=request.user)
+        products = Product.objects.filter(profile=profile)
+        order_item = OrderItems.objects.filter(product__in=products)
+        total = 0
+        # get total order
+        for i in order_item:
+            subtotal = i.product.price * i.quantity
+            total = subtotal + total
+
+        context = {
+            'profile': profile,
+            'products': products,
+            'order': order_item,
+            'total': total
+        }
+        return render(request, 'order.html', context)
+    else:
+        return redirect('SIGNIN')
+
 
 def tables(request):
     if request.user.is_authenticated:
@@ -78,7 +111,7 @@ def add_product(request):
             # save product
             categoryobj = ProductCategory.objects.filter(
                 profile=profile).order_by('-id')[:1].get()
-                
+
             primaryimg = productImages[0]
             secondary = productImages[1]
             Product(pd_name=pd_name, brands=brand, description=description, price=price,
@@ -152,6 +185,7 @@ def update_blog(request, id):
     else:
         return redirect('account/signin')
 
+
 def update_product(request, id):
     if request.user.is_authenticated:
         product = Product.objects.get(id=id)
@@ -169,10 +203,10 @@ def update_product(request, id):
             # save product
             categoryobj = ProductCategory.objects.filter(
                 profile=profile).order_by('-id')[:1].get()
-                
+
             primaryimg = image[0].pd_iamges
             secondary = image[1].pd_iamges
-            Product(id=id,pd_name=pd_name, brands=brand, description=description, price=price,
+            Product(id=id, pd_name=pd_name, brands=brand, description=description, price=price,
                     availability=availability, category=categoryobj, profile=profile, primary=primaryimg, secondary=secondary).save()
             return redirect("product_table")
         context = {
@@ -189,6 +223,7 @@ def delete(request, id):
     os.remove(blog.blog_image.path)
     blog.delete()
     return redirect("blog_table")
+
 
 def deleteProduct(request, id):
     product = Product.objects.get(id=id)

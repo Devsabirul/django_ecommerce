@@ -1,0 +1,73 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block title %}Dashboard Orders - SHISHIR{% endblock title %}
+{% block profile %}
+<div class="d-flex align-items-center ms-4 mb-4">
+    <div class="position-relative">
+        <div class="profile_pic">
+            <img class="" src="{{profile.avater.url}}" alt="">
+        </div>
+        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+    </div>
+    <div class="ms-3">
+        <h6 class="mb-0">{{profile.user.username}}</h6>
+        <span>Admin</span>
+    </div>
+</div>
+{% endblock profile %}
+{% block body %}
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">All Orders</h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr class="text-white">
+                        <th scope="col">S.N</th>
+                        <th scope="col">Order Id</th>                        
+                        <th scope="col" style="">Product Name</th>
+                        <th scope="col" style="">Order Status</th>
+                        <th scope="col" style="">Quantity</th>
+                        <th scope="col" style="">Price</th>
+                        <th scope="col" style="">Total</th>
+                        <th scope="col">Action</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    {% if order %}
+                    {% for order in order %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td scope="col" class="">#{{order.order.id}}
+                        </td>
+                        <td scope="col" class="">{{order.product.pd_name|truncatechars:30}}</td>
+                        <td scope="col" class="">
+                            {{order.order.status}}
+                        </td>
+                        <td scope="col" class="">
+                            {{order.quantity}}
+                        </td>
+                        <td scope="col" class="">${{order.product.price}}</td>
+                        <td scope="col" class="">${{order.order_subtotal}}</td>
+                        <td scope="col" class=""><a class="btn btn-sm btn-primary" href="{% url 'update_product' order.product.id %}">Detail</a></td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center text-danger">Orders not available</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td colspan="6" style="text-align: right;padding-right: 20px;">Total Orders :</td>
+                        <td colspan="2" style="font-weight:bold;" class="text-danger">${{total}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

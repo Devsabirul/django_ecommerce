@@ -336,11 +336,13 @@
                                                 <li><a class="uren-add_cart" href="{% url 'ADD_TO_CART' product.id %}" data-toggle="tooltip"
                                                         data-placement="top" title="Add To Cart"><i class="ion-bag"></i></a>
                                                 </li>
-                                                <li><a class="uren-wishlist" href="javascript:void(0)" data-toggle="tooltip"
+                                                <li>
+                                                <a class="uren-wishlist" href="javascript:void(0)" data-toggle="tooltip"
                                                         data-placement="top" title="Add To Wishlist"><i
                                                             class="ion-android-favorite-outline"></i></a>
                                                 </li>
-                                                <li><a class="uren-add_compare" href="compare.html" data-toggle="tooltip"
+                                                <li>
+                                                <a class="uren-add_compare" href="javascript:void(0)" data-toggle="tooltip"
                                                         data-placement="top" title="Compare This Product"><i
                                                             class="ion-android-options"></i></a>
                                                 </li>
@@ -362,7 +364,7 @@
                                                     <li class="silver-color"><i class="ion-android-star"></i></li>
                                                 </ul>
                                             </div>
-                                            <h6><a class="product-name" href="{% url 'detailsProduct' product.slug %}">{{product.pd_name}}</a></h6>
+                                            <h6><a class="product-name" href="{% url 'detailsProduct' product.slug %}">{{product.pd_name|truncatechars:50}}</a></h6>
                                             <div class="price-box">
                                                 <span class="new-price">${{product.price}}</span>
                                             </div>
@@ -372,8 +374,6 @@
                             </div>
                         </div>
                     {% endfor %}
-                    
-
                 </div>
             </div>
         </div>

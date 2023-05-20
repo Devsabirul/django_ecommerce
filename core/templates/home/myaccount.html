@@ -28,9 +28,6 @@
                             <a class="nav-link" id="account-orders-tab" data-toggle="tab" href="#account-orders" role="tab" aria-controls="account-orders" aria-selected="false">Orders</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="account-address-tab" data-toggle="tab" href="#account-address" role="tab" aria-controls="account-address" aria-selected="false">Addresses</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" id="account-details-tab" data-toggle="tab" href="#account-details" role="tab" aria-controls="account-details" aria-selected="false">Account Details</a>
                         </li>
                         <li class="nav-item">
@@ -58,45 +55,26 @@
                                                 <th>DATE</th>
                                                 <th>STATUS</th>
                                                 <th>TOTAL</th>
-                                                <th></th>
+                                                <th>ACTION</th>
                                             </tr>
+                                            {% if order %}
+                                                {% for order in order %}
+                                                <tr>
+                                                    <td><a class="account-order-id" href="javascript:void(0)">#{{order.id}}</a></td>
+                                                    <td>{{order.date}}</td>
+                                                    <td>{{order.status}}</td>
+                                                    <td>${{order.order_total}}</td>
+                                                    <td><a href="{% url 'invoice' order.id %}" class="uren-btn uren-btn_dark uren-btn_sm"><span>View</span></a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            {% else %}
                                             <tr>
-                                                <td><a class="account-order-id" href="javascript:void(0)">#5364</a></td>
-                                                <td>Mar 27, 2019</td>
-                                                <td>On Hold</td>
-                                                <td>£162.00 for 2 items</td>
-                                                <td><a href="javascript:void(0)" class="uren-btn uren-btn_dark uren-btn_sm"><span>View</span></a>
-                                                </td>
+                                            <td colspan="4" class="text-center text-danger font-weight-bold">Order Not available</td>
                                             </tr>
-                                            <tr>
-                                                <td><a class="account-order-id" href="javascript:void(0)">#5356</a></td>
-                                                <td>Mar 27, 2019</td>
-                                                <td>On Hold</td>
-                                                <td>£162.00 for 2 items</td>
-                                                <td><a href="javascript:void(0)" class="uren-btn uren-btn_dark uren-btn_sm"><span>View</span></a>
-                                                </td>
-                                            </tr>
+                                            {% endif %}
                                         </tbody>
                                     </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="account-address" role="tabpanel" aria-labelledby="account-address-tab">
-                            <div class="myaccount-address">
-                                <p>The following addresses will be used on the checkout page by default.</p>
-                                <div class="row">
-                                    <div class="col">
-                                        <h4 class="small-title">BILLING ADDRESS</h4>
-                                        <address>
-                                            1234 Heaven Stress, Beverly Hill OldYork UnitedState of Lorem
-                                        </address>
-                                    </div>
-                                    <div class="col">
-                                        <h4 class="small-title">SHIPPING ADDRESS</h4>
-                                        <address>
-                                            1234 Heaven Stress, Beverly Hill OldYork UnitedState of Lorem
-                                        </address>
-                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -11,4 +11,5 @@ urlpatterns = [
     path('delete-product/<int:id>', deleteProduct, name="deleteProduct"),
     path('table-blog', blog_table, name="blog_table"),
     path('product-table', product_table, name="product_table"),
+    path('order-table', order_table, name="order_table"),
 ]

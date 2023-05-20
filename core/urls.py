@@ -3,6 +3,7 @@ from .views import *
 urlpatterns = [
     path('', home, name="HOME"),
     path('my-account', myaccount, name="myaccount"),
+    path('invoice/<int:id>', invoice, name="invoice"),
     path('shop', shop, name="SHOP"),
     path('cart', cart, name="CART"),
     path('checkout', checkoutPage, name="checkoutPage"),
