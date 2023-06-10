@@ -12,4 +12,7 @@ urlpatterns = [
     path('product-details/<slug:slug>', detailsProduct, name="detailsProduct"),
     path('blog', blog, name="blog"),
     path('single_blog/<slug:slug>', single_blog, name="single_blog"),
+    path('payment', sslcommerz_payment, name="payment"),
+    path('payment-success', sslcommerz_success, name="sslcommerz_success"),
+    path('payment-failed', sslcommerz_failed, name="sslcommerz_failed"),
 ]

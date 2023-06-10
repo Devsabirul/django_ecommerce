@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Failed</title>
+
+  <style>
+    .error {
+      max-width: 350px;
+      margin: 0 auto;
+      background-color: #fff;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      padding: 30px 0;
+      text-align: center;
+      margin-top: 8%;
+    }
+
+    .error * {
+      box-sizing: border-box;
+    }
+
+    .error__circle {
+      width: 100px;
+      height: 100px;
+      background-color: #2ecc71;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 100px;
+      margin: 0 auto;
+      font-size: 35px;
+      font-family: fantasy;
+      color: #fff;
+    }
+
+    .error__text {
+      font-family: Arial;
+      padding: 0 15%;
+    }
+
+    .error__text--lg {
+      padding: 25px 0;
+      font-size: 24px;
+      color: #23901d;
+    }
+
+    .error__text--sm {
+      color: #171717;
+      font-size: 18px;
+    }
+
+    .error__btn {
+      display: block;
+      width: 80%;
+      margin: 0 auto;
+      height: 45px;
+      line-height: 45px;
+      border: none;
+      background-color: #2dcb71;
+      text-align: center;
+      color: #fff;
+      text-decoration: none;
+      font-family: Arial;
+      margin-top: 25px;
+    }
+
+    .error__btn:hover {
+      background-color: #28b665;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="error">
+    <div class="error__circle">!</div>
+    <div class="error__text error__text--lg">oops! Payment failed</div>
+    <div class="error__text error__text--sm">please choose another payment method to complete payment process</div>
+    <a class="error__btn" href="{% url 'payment' %}">Choose Payment</a>
+  </div>
+</body>
+
+</html>

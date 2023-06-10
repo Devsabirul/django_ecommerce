@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .models import *
 from django.db.models import Q
 from .forms import *
+from sslcommerz_lib import SSLCOMMERZ
 
 
 def home(request):
@@ -108,7 +110,9 @@ def detailsProduct(request, slug):
     product = Product.objects.get(slug=slug)
     products = Product.objects.order_by("-id")
     pdImg = ProductImages.objects.filter(product=product)
-    carts = Cart.objects.filter(user=request.user)
+    carts = []
+    if request.user.is_authenticated:
+        carts = Cart.objects.filter(user=request.user)
     subtotal = get_subTotal(carts)
 
     if request.method == "POST":
@@ -143,7 +147,9 @@ def blog(request):
 
     blogs = BlogPost.objects.all()
     recents = BlogPost.objects.order_by('-id')
-    carts = Cart.objects.filter(user=request.user)
+    carts = []
+    if request.user.is_authenticated:
+        carts = Cart.objects.filter(user=request.user)
     subtotal = get_subTotal(carts)
 
     context = {
@@ -164,7 +170,9 @@ def single_blog(request, slug):
     blog = BlogPost.objects.get(slug=slug)
     blogs = BlogPost.objects.order_by('-id')
     tag = blog.tag.split(",")
-    carts = Cart.objects.filter(user=request.user)
+    carts = []
+    if request.user.is_authenticated:
+        carts = Cart.objects.filter(user=request.user)
     subtotal = get_subTotal(carts)
 
     context = {
@@ -249,16 +257,20 @@ def checkoutPage(request):
                 if sfm.is_valid():
                     sfm.save()
 
-                customer_ = Customer.objects.order_by("-id")[:1].get()
-                shipping_ = Shipping.objects.order_by("-id")[:1].get()
-                order = Order(customer=customer_, shipping=shipping_,
-                              user=request.user, order_total=subtotal)
-                order.save()
-                order_ = Order.objects.order_by("-id")[:1].get()
-                for i in carts:
-                    OrderItems(order=order_, product=i.product,
-                               quantity=i.quantity, user=request.user).save()
-                return redirect("SHOP")
+                payment_method = request.POST['payment_method']
+                if payment_method == "online":
+                    return redirect("payment")
+                else:
+                    customer_ = Customer.objects.order_by("-id")[:1].get()
+                    shipping_ = Shipping.objects.order_by("-id")[:1].get()
+                    order = Order(customer=customer_, shipping=shipping_,
+                                  user=request.user, order_total=subtotal)
+                    order.save()
+                    order_ = Order.objects.order_by("-id")[:1].get()
+                    for i in carts:
+                        OrderItems(order=order_, product=i.product,
+                                   quantity=i.quantity, user=request.user).save()
+                    return redirect("myaccount")
 
             context = {
                 'is_user': is_logged_in,
@@ -271,6 +283,66 @@ def checkoutPage(request):
         return redirect('SHOP')
     else:
         return redirect('SIGNIN')
+
+
+# payment_method functionality
+@csrf_exempt
+def sslcommerz_success(request):
+    print(request.user)
+    # carts = Cart.objects.filter(user=request.user)
+    # subtotal = get_subTotal(carts)
+    # print(subtotal)
+    # customer_ = Customer.objects.order_by("-id")[:1].get()
+    # shipping_ = Shipping.objects.order_by("-id")[:1].get()
+    # order = Order(customer=customer_, shipping=shipping_,
+    #               user=request.user, order_total=subtotal)
+    # order.save()
+    # order_ = Order.objects.order_by("-id")[:1].get()
+    # for i in carts:
+    #     OrderItems(order=order_, product=i.product,
+    #                quantity=i.quantity, user=request.user).save()
+    return render(request, "home/success.html")
+
+
+@csrf_exempt
+def sslcommerz_failed(request):
+    return render(request, "home/fail.html")
+
+
+def sslcommerz_payment(request):
+    carts = Cart.objects.filter(user=request.user)
+    subtotal = get_subTotal(carts)
+    user = request.user
+    customer_ = Customer.objects.order_by("-id")[:1].get()
+    shipping_ = Shipping.objects.order_by("-id")[:1].get()
+    sslcz = SSLCOMMERZ({
+        'store_id': 'shisa647c62f919419',
+        'store_pass': 'shisa647c62f919419@ssl',
+        'issandbox': True
+    })
+
+    data = {
+        'total_amount': subtotal,
+        'currency': "BDT",
+        'tran_id': "tran_12345",
+        'success_url': "http://127.0.0.1:8000/payment-success",
+        'fail_url': "http://127.0.0.1:8000/payment-failed",
+        'emi_option': "0",
+        'cus_name': user,
+        'cus_email': user.email,
+        'cus_phone': customer_.phone,
+        'cus_add1': customer_.Address,
+        'cus_city': customer_.city,
+        'cus_country': "Bangladesh",
+        'shipping_method': "NO",
+        'multi_card_name': "",
+        'num_of_item': 1,
+        'product_name': "Test",
+        'product_category': "Test Category",
+        'product_profile': "general",
+    }
+    response = sslcz.createSession(data)
+    return redirect(response['GatewayPageURL'])
 
 
 # custom function

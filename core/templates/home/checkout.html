@@ -14,6 +14,33 @@
 {% endif %}
 {% endblock account %}
 {% block body %}
+<style>
+    select#payment_method {
+        padding: 10px;
+        color: gray;
+        border: 1px solid gray;
+        width: 100%;
+    }
+
+    .order-button-payment button {
+        background: #999999;
+        border: medium none;
+        color: #ffffff;
+        font-size: 17px;
+        font-weight: 600;
+        height: 50px;
+        margin: 20px 0 0;
+        padding: 0;
+        text-transform: uppercase;
+        width: 100%;
+        border: 1px solid transparent;
+        cursor: pointer;
+    }
+
+    .order-button-payment button:hover {
+        background: red;
+    }
+</style>
 <!-- Begin Uren's Breadcrumb Area -->
 <div class="breadcrumb-area">
     <div class="container">
@@ -82,128 +109,88 @@
                                 </div>
                             </div>
                         </div>
-                </form>
-            </div>
 
-        </div>
-        <div class="col-lg-6 col-12">
-            <div class="your-order">
-                <h3>Your order</h3>
-                <div class="your-order-table table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th class="cart-product-name">Product</th>
-                                <th class="cart-product-total">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for cart in carts %}
-                            <tr class="cart_item">
-                                <td class="cart-product-name"> {{cart.product.pd_name|truncatechars:20}}<strong
-                                        class="product-quantity">
-                                        ×{{cart.quantity}}</strong></td>
-                                <input type="hidden" name="product" value="{{cart.product.id}}">
-                                <input type="hidden" name="quantity" value="{{cart.quantity}}">
-                                <td class="cart-product-total"><span class="amount">${{cart.line_total}}</span>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr class="cart-subtotal">
-                                <th>Cart Subtotal</th>
-                                <td><span class="amount">${{subtotal}}</span></td>
-                            </tr>
-                            <tr class="order-total">
-                                <th>Order Total</th>
-                                <td><strong><span class="amount">${{subtotal}}</span></strong></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div class="payment-method">
-                    <div class="payment-accordion">
-                        <div id="accordion">
-                            <div class="card">
-                                <div class="card-header" id="#payment-1">
-                                    <h5 class="panel-title">
-                                        <a href="javascript:void(0)" class="" data-toggle="collapse"
-                                            data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            Direct Bank Transfer.
-                                        </a>
-                                    </h5>
-                                </div>
-                                <div id="collapseOne" class="collapse show" data-parent="#accordion">
-                                    <div class="card-body">
-                                        <p>Make your payment directly into our bank account. Please use your
-                                            Order
-                                            ID as the payment
-                                            reference. Your order won’t be shipped until the funds have cleared
-                                            in
-                                            our account.</p>
+                    </div>
+
+            </div>
+            <div class="col-lg-6 col-12">
+                <div class="your-order">
+                    <h3>Your order</h3>
+                    <div class="your-order-table table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="cart-product-name">Product</th>
+                                    <th class="cart-product-total">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cart in carts %}
+                                <tr class="cart_item">
+                                    <td class="cart-product-name"> {{cart.product.pd_name|truncatechars:20}}<strong
+                                            class="product-quantity">
+                                            ×{{cart.quantity}}</strong></td>
+                                    <input type="hidden" name="product" value="{{cart.product.id}}">
+                                    <input type="hidden" name="quantity" value="{{cart.quantity}}">
+                                    <td class="cart-product-total"><span class="amount">${{cart.line_total}}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="cart-subtotal">
+                                    <th>Cart Subtotal</th>
+                                    <td><span class="amount">${{subtotal}}</span></td>
+                                </tr>
+                                <tr class="order-total">
+                                    <th>Order Total</th>
+                                    <td><strong><span class="amount">${{subtotal}}</span></strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="payment-method">
+                        <div class="payment-accordion">
+                            <div id="accordion">
+                                <div class="card">
+                                    <div class="card-header" id="#payment-1">
+                                        <select class="form-select" name="payment_method" id="payment_method">
+                                            <option selected disabled>Select Payment method</option>
+                                            <option value="cod">Cash on delivery.</option>
+                                            <option value="online">Online Payment.</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
-                                <div class="card-header" id="#payment-2">
-                                    <h5 class="panel-title">
-                                        <a href="javascript:void(0)" class="collapsed" data-toggle="collapse"
-                                            data-target="#collapseTwo" aria-expanded="false"
-                                            aria-controls="collapseTwo">
-                                            Cheque Payment
-                                        </a>
-                                    </h5>
-                                </div>
-                                <div id="collapseTwo" class="collapse" data-parent="#accordion">
-                                    <div class="card-body">
-                                        <p>Make your payment directly into our bank account. Please use your
-                                            Order
-                                            ID as the payment
-                                            reference. Your order won’t be shipped until the funds have cleared
-                                            in
-                                            our account.</p>
-                                    </div>
-                                </div>
+                            </form>
+                            <p id="alert_btn_payment" class="text-danger"></p>
+                            <div class="order-button-payment" style="margin-top: -29px !important;">
+                                <button id="submit_order" type="submit" disabled>Place order</button>
                             </div>
-                            <div class="card">
-                                <div class="card-header" id="#payment-3">
-                                    <h5 class="panel-title">
-                                        <a href="javascript:void(0)" class="collapsed" data-toggle="collapse"
-                                            data-target="#collapseThree" aria-expanded="false"
-                                            aria-controls="collapseThree">
-                                            PayPal
-                                        </a>
-                                    </h5>
-                                </div>
-                                <div id="collapseThree" class="collapse" data-parent="#accordion">
-                                    <div class="card-body">
-                                        <p>Make your payment directly into our bank account. Please use your
-                                            Order
-                                            ID as the payment
-                                            reference. Your order won’t be shipped until the funds have cleared
-                                            in
-                                            our account.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="order-button-payment">
-                            <input id="submit_order" value="Place order" type="submit">
+
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
 </div>
 <!-- Uren's Checkout Area End Here -->
 
 <script>
     var submit_btn = document.getElementById("submit_order");
     var form_ = document.getElementById("formsubmit");
+    var payment_method = document.getElementById("payment_method");
+    if (submit_btn.disabled) {
+        document.getElementById("alert_btn_payment").innerHTML = "please select payment method."
+        submit_btn.style.backgroundColor = "gray";
+    }
+    payment_method.addEventListener("change", function () {
+        document.getElementById("alert_btn_payment").innerHTML = "";
+        submit_btn.style.backgroundColor = "";
+        submit_btn.removeAttribute("disabled");
+    });
     submit_btn.addEventListener("click", function () {
         var inputs = form_.getElementsByTagName('input');
         let isFormValid = true;

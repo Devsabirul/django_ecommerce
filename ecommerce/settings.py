@@ -56,7 +56,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                # "core.views.carts", 
+                # "core.views.carts",
             ],
         },
     },
@@ -125,3 +125,7 @@ EMAIL_HOST_PASSWORD = config('EMAIL_PASSWORD')
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # USE_THOUSAND_SEPARATOR = True
+
+SESSION_COOKIE_SECURE = True  # Ensure secure cookies for HTTPS
+SESSION_COOKIE_SAMESITE = 'Lax'  # Adjust the value as per your requirements
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
